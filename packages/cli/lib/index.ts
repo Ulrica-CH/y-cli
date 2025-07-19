@@ -1,6 +1,6 @@
 interface IParams {
   name: string
 }
-export default function nihao(params: IParams) {
-  console.log('你好')
+export default function runClI(params?: IParams) {
+  console.log('你好', params)
 }
