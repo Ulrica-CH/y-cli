@@ -131,3 +131,51 @@ export default function runClI() {
 
 - 命令行解析工具
 - 需要require 方式
+- 关于插件注册的两种写法
+
+```typescript
+export default function registerCommand(command: Command) {
+  program.addCommand(command)
+}
+```
+
+```typescript
+/**
+ * 扩展性更高,每个插件不再依赖 program
+ * 更加灵活,上面的写法无法控制插件,无法添加自定义逻辑
+ */
+type Fn = (program: Command) => Command
+export default function registerCommand(fn: Fn) {
+  program.addCommand(fn(program))
+}
+```
+
+- 一个比较全的例子
+
+```typescript
+export default function createCommandPluginCreate(program: Command) {
+  return program
+    .createCommand('create')
+    .arguments('<projectName>')
+    .option('-f, --framework <framework>', 'framework')
+    .option('-t, --template <template>', 'template')
+    .option('-r, --remote <remote>', 'remote')
+    .description('create a new project')
+    .action(async (projectName: string, options: CreateCommandOptions) => {
+      console.log(projectName, options)
+      logger.log(pc.green(`Project name: ${projectName} ${options}`))
+    })
+}
+```
+
+## picocolors
+
+- 终端颜色库
+
+## consola
+
+- 提供比 console 更好的日志输出格式和功能
+
+## prompts
+
+- 交互式命令行输入库,用于获取用户输入,支持多种类型
