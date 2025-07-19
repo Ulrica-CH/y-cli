@@ -19,6 +19,20 @@
   - packages/cli
   - package/core
 - init typescript
+  - module - 模块输出格式
+    - 指定 TypeScript 编译后生成的 JavaScript 代码使用哪种模块系统
+    - 默认 cjs 可选 ESNest umd
+  - moduleResolution - 模块解析策略
+    - 指定 TypeScript 如何查找和解析模块导入
+    - node(传统)
+    - bundler(现代化构建) node16/nodenext
+      - 支持 package.json exports,支持更多文件扩展名
+  - allowImportingTsExtensions: true
+    - 允许在导入语句中包含 TypeScript 文件扩展名
+  - emitDeclarationOnly: true
+    - 只生成 TypeScript 声明文件（.d.ts），不生成 JavaScript 文件
+    - js 文件由构建器生成
+    - 或者另一个配置 noEmit:true
 - 配置入口 打包构建 测试正常流程
   - 配置 bin 字段用于定义二进制可执行文件入口
   - 可以对应多个 bin 文件
@@ -30,7 +44,6 @@
 ```
 
 - 调试
-
   - npm link(全局软连接)
   - pnpm workspace
     - 在某个子包安装 cli workspace:'\*'
@@ -49,3 +62,72 @@
 - eslint prettier
 - cspell
 - husky commitizen
+- husky 初始化可能回缺失文件导致不生效
+
+## 读取命令行参数
+
+- 初始做法
+
+```typescript
+import { create, deploy } from './commands'
+export default function runClI() {
+  const command = process.argv[2]
+  switch (command) {
+    case 'create':
+      create()
+      break
+    case 'deploy':
+      deploy()
+      break
+    default:
+      break
+  }
+}
+```
+
+- 存在缺点
+  - 扩展性差
+    - 如果新增一个命令,需要再来一个 case,每次添加新命令都要修改核心文件
+  - 代码耦合度太高
+    - 所有命令逻辑都在一个文件中
+  - 维护困难
+    - 单个文件承担了太多责任
+    - 修改一个命令可能意外的影响到了其他命令
+- 插件化机制
+  - 一种设计思想,及软件通过加载外部插件(功能模块)来扩展自身功能,而无需修改自身的核心代码逻辑
+  - 命令职责单一
+  - 高内聚,松耦合
+  - 便于扩展
+
+```typescript
+import { create, deploy } from './commands'
+const commands = new Map<string, () => void>()
+function registerCommand(command: string, action: () => void) {
+  commands.set(command, action)
+}
+registerCommand('create', create)
+registerCommand('deploy', deploy)
+export default function runClI() {
+  const command = process.argv[2]
+  const action = commands.get(command)
+  if (action) {
+    action()
+  } else {
+    throw new Error(`command ${command} not found`)
+  }
+}
+```
+
+## 记录下 cjs 和 esm
+
+- 为啥有的文件在不设置 type：module 也可以使用 es 语法
+  - 比如 tsup.config.ts
+  - 其实这个文件是在 tsup 环境里执行的,tsup 支持 es 语法,所以可以 import
+  - 而 lib/index.ts 作为 tsup 打包入口文件,由 tsup 来解析,自然也可以使用 import
+  - 但是 bin下的二进制就不行了,因为这是由 node 来执行的自然就不支持 import 了
+  - 关于 tsconfig.json里是用来给 tsc 用的,不会影响 tsup.config.ts
+
+## commander
+
+- 命令行解析工具
+- 需要require 方式

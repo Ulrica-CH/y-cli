@@ -61,17 +61,19 @@ importers:
         version: link:../../packages/cli
 
   packages/cli:
-    dependencies:
+    devDependencies:
+      '@types/node':
+        specifier: ^20.19.9
+        version: 20.19.9
+      commander:
+        specifier: 14.0.0
+        version: 14.0.0
       tsup:
         specifier: ^7.3.0
         version: 7.3.0(typescript@5.8.3)
       typescript:
         specifier: ^5.8.3
         version: 5.8.3
-    devDependencies:
-      '@types/node':
-        specifier: ^20.19.9
-        version: 20.19.9
 
   packages/core:
     dependencies:
