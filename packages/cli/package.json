@@ -13,6 +13,7 @@
     "templates"
   ],
   "scripts": {
+    "test": "echo \"test\"",
     "build": "tsup",
     "dev": "tsup --watch",
     "release": "pnpm build && np",
