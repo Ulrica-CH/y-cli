@@ -2,12 +2,13 @@ import type { Command } from 'commander'
 import pc from 'picocolors'
 import prompts from 'prompts'
 
+import loadTemplate from '../utils/loadTemplate'
 import { logger } from '../utils/logger'
 
 type CreateCommandOptions = {
   framework?: string
   template?: string
-  remote?: string
+  remote?: boolean
 }
 export default function createCommandPluginCreate(program: Command) {
   return program
@@ -21,12 +22,9 @@ export default function createCommandPluginCreate(program: Command) {
       console.log(projectName, options)
       logger.log(pc.green(`Project name: ${projectName} ${options}`))
 
-      let { framework, template } = options
+      let { framework = 'vue', template = 'vue-ts' } = options
 
-      if (options.remote) {
-        /** 执行远程拉去代码操作 */
-        return
-      }
+  
 
       if (!framework) {
         const res = await prompts({
@@ -56,6 +54,25 @@ export default function createCommandPluginCreate(program: Command) {
         template = res.template
       }
 
-      console.log(framework, template)
+      if (options.remote) {
+        console.log('remote',{
+          projectName,
+          template,
+          remote: options.remote
+        })
+        /** 执行远程拉去代码操作 */
+        loadTemplate({
+          projectName,
+          template,
+          remote: options.remote
+        })
+        return
+      }
+      /** 加载模板 */
+      loadTemplate({
+        projectName,
+        template,
+        remote: options.remote
+      })
     })
 }

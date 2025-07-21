@@ -24,6 +24,10 @@
     "picocolors": "1.1.1",
     "consola": "3.4.2",
     "prompts": "2.4.2",
-    "@types/prompts": "2.4.9"
+    "@types/prompts": "2.4.9",
+    "ora": "8.2.0",
+    "fs-extra": "11.3.0",
+    "@types/fs-extra": "11.0.4",
+    "giget": "1.0.0"
   }
 }

@@ -179,3 +179,22 @@ export default function createCommandPluginCreate(program: Command) {
 ## prompts
 
 - 交互式命令行输入库,用于获取用户输入,支持多种类型
+
+## 加载本地模板
+
+- 本地定义好 template,根据 template 选项匹配目录,copy 到命令行工作目录,并自定义修改 pkg 文件如 name 和 version
+- ora 命令行 loading 提示库
+- fs-extra fs 文件操作增强库
+
+## 加载远程模板
+
+- giget 从远程 github 下载模板
+- copy 到命令行工作目录,并自定义修改 pkg 文件如 name 和 version
+- 删除下载下来用于中专的文件
+
+## serve 子进程
+
+- child_process Node 进程库
+- 判断有无 pnpm 环境
+
+## Turbo
