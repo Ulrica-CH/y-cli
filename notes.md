@@ -208,4 +208,83 @@ const child = spawn(command, params, {
 - 然后可以全局 npm link 一下 cli 这个包,这样就可以在创建出来的项目运行 y serve -> pnpm dev启动项目
 - build 同理
 
-## Turbo
+## as const
+
+- TypeScript 的一个断言，告诉编译器这个数组是一个只读（readonly）元组，并且其每个元素的类型是字面量类型，而不是 string 类型
+
+```typescript
+const frameworks = ['vue', 'react', 'vanilla']
+// 推断类型：string[]
+
+const frameworks = ['vue', 'react', 'vanilla'] as const
+// 推断类型：readonly ['vue', 'react', 'vanilla']
+```
+
+- 更精确的类型检查 防止修改
+  - 用它来做类型推导、枚举判断等，TypeScript 能更准确地推断出合法值
+
+```typescript
+// 把只读数组的所有元素类型，合成一个联合类型
+type Framework = (typeof frameworks)[number]
+// => 'vue' | 'react' | 'vanilla'
+```
+
+## Turbopack
+
+- 现代打包工具，由 Vercel 出品，用于构建 JS/TS 应用（特别是 Next.js）
+- Rust 编写，性能极致优化
+- 支持：
+  - 快速开发启动、HMR
+  - 增量构建、懒加载
+  - 模块级缓存
+- 为什么 Turborepo 可以自动打包每个子包
+  - 通过分析源码中的 import '@myorg/utils' 推断真实依赖关系
+  - 利用 workspace 配置
+  - 任务依赖图自动推导
+    - 利用 turbo.json 配置任务（如 build、dev）
+    - 自动构建依赖关系图（依赖顺序、是否变更）
+- 是否需要 Turborepo
+  - 多个子包 monorepo 体系
+  - 子包之间有依赖
+  - 提高构建速度并缓存 增量构建
+
+```json
+{
+  "$schema": "https://turbo.build/schema.json",
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**"]
+    },
+    "test": {
+      "outputs": ["coverage/**"],
+      "dependsOn": ["build"]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "release": {
+      "dependsOn": ["^build"]
+    }
+  },
+  "ui": "tui"
+}
+```
+
+| 字段         | 含义与作用                               |
+| ------------ | ---------------------------------------- |
+| `$schema`    | 提供类型提示                             |
+| `tasks`      | 所有自定义任务                           |
+| `dependsOn`  | 声明依赖任务（`^` 表示上游依赖包）       |
+| `outputs`    | 指定构建输出，用于缓存判断               |
+| `cache`      | 是否启用缓存（适用于 `dev` 等任务）      |
+| `persistent` | 是否是长时间运行的任务（如本地服务）     |
+| `ui`         | 是否使用终端 UI，值为 `"tui"` 或 `false` |
+
+## 代码重构
+
+- 如果你的项目堆叠了太多的 if else 等逻辑
+- 如果功能全部耦合在一个函数里
+- 那就需要拆分
+- 不然后期你要拓展 那这个函数功能就会越来越臃肿,职责太多
