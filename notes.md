@@ -197,4 +197,15 @@ export default function createCommandPluginCreate(program: Command) {
 - child_process Node 进程库
 - 判断有无 pnpm 环境
 
+```typescript
+const command = _hasPnpm ? 'pnpm' : 'npm'
+const params = _hasPnpm ? ['dev'] : ['run', 'dev']
+const child = spawn(command, params, {
+  stdio: 'inherit'
+})
+```
+
+- 然后可以全局 npm link 一下 cli 这个包,这样就可以在创建出来的项目运行 y serve -> pnpm dev启动项目
+- build 同理
+
 ## Turbo
