@@ -288,3 +288,15 @@ type Framework = (typeof frameworks)[number]
 - 如果功能全部耦合在一个函数里
 - 那就需要拆分
 - 不然后期你要拓展 那这个函数功能就会越来越臃肿,职责太多
+
+## 发布
+
+- 阿里云效 制品仓库 (nrm 切换仓库地址 npm login pnpm build)
+- 配合 np 自动化version 以及打标签 (np 自动化设置版本 打标签 以及 publish)
+  - publish 前记得设置 pkg 的上传 files
+  - 目前有个问题:npm login 但是 np publish 报错
+
+- verdaccio
+  - 在本地或私有服务器上搭建的“npm 仓库副本”，适用于企业私有包管理、本地测试、团队协作等场景
+  - npm install -g verdaccio
+  -

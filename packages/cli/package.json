@@ -1,6 +1,6 @@
 {
   "name": "y-cli",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "",
   "main": "./dist/index",
   "module": "./dist/index",
@@ -23,20 +23,22 @@
   "author": "",
   "license": "ISC",
   "packageManager": "pnpm@9.12.2+sha512.22721b3a11f81661ae1ec68ce1a7b879425a1ca5b991c975b074ac220b187ce56c708fe5db69f4c962c989452eee76c82877f4ee80f474cebd61ee13461b6228",
-  "dependencies": {},
+  "dependencies": {
+    "y-cli": "^1.0.0"
+  },
   "devDependencies": {
-    "@types/node": "^20.19.9",
-    "tsup": "^7.3.0",
-    "typescript": "^5.8.3",
-    "commander": "14.0.0",
-    "picocolors": "1.1.1",
-    "consola": "3.4.2",
-    "prompts": "2.4.2",
-    "@types/prompts": "2.4.9",
-    "ora": "8.2.0",
-    "fs-extra": "11.3.0",
     "@types/fs-extra": "11.0.4",
+    "@types/node": "^20.19.9",
+    "@types/prompts": "2.4.9",
+    "commander": "14.0.0",
+    "consola": "3.4.2",
+    "fs-extra": "11.3.0",
     "giget": "1.0.0",
-    "np": "10.2.0"
+    "np": "10.2.0",
+    "ora": "8.2.0",
+    "picocolors": "1.1.1",
+    "prompts": "2.4.2",
+    "tsup": "^7.3.0",
+    "typescript": "^5.8.3"
   }
 }
